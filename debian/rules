@@ -1,0 +1,125 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+#
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+#
+# Modified to make a template file for a multi-binary package with separated
+# build-arch and build-indep targets  by Bill Allombert 2001
+#
+# Modified by Sveinung Kvilhaugsvik. Any changes I have done are hereby
+# released under the GPL or the license of nanoxml as stated in copyright
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+JAVA?=/usr/lib/jvm/default-java/bin/java
+JAVAC?=/usr/lib/jvm/default-java/bin/javac
+JAR?=/usr/lib/jvm/default-java/bin/jar
+JFLAGS?=-source 1.4 -nowarn
+JAVADOC?=/usr/lib/jvm/default-java/bin/javadoc
+
+SRCDIR := $(shell echo ./$(word $(words ${MAKEFILE_LIST}), ${MAKEFILE_LIST}) | \
+sed -r "s/debian\/rules$$//")
+VERSION := $(shell cd ${SRCDIR} && dpkg-parsechangelog | egrep '^Version:' | \
+cut -f 2 -d ' ' | sed -r 's/\.dfsg(.)*//g')
+
+NANOXML := nanoxml2-${VERSION}.jar
+LITE := nanoxml2-lite-${VERSION}.jar
+SAX := nanoxml2-sax-${VERSION}.jar
+
+#Architecture 
+build: build-stamp test
+
+build-stamp:
+	(cd Sources/Lite && \
+	${JAVAC} ${JFLAGS} -d ../../classes/Lite `find -iname *.java`)
+	(cd classes/Lite && \
+	${JAR} cf ../../${LITE} * )
+	(cd Sources/Java && \
+	${JAVAC} ${JFLAGS} -d ../../classes/Java `find -iname *.java`)
+	(cd classes/Java && ${JAR} cf ../../${NANOXML} * )
+	(cd Sources/SAX && ${JAVAC} ${JFLAGS} -d ../../classes/SAX \
+	-cp ../../${NANOXML} `find -iname *.java`)
+	(cd classes/SAX && \
+	echo Class-Path: /usr/share/java/${NANOXML} >> manifest && \
+	${JAR} cf ../../${SAX} net  -m manifest)
+	${JAVADOC} -author -link /usr/share/doc/classpath-doc/api/ -quiet \
+	-sourcepath Sources/Java/:Sources/Lite/:Sources/SAX/ -validhtml \
+	nanoxml net.n3.nanoxml net.n3.nanoxml.sax -d api
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp test
+
+	rm -rf classes || echo "no classes to remove"
+	rm ${SAX} ${NANOXML} ${LITE} || echo "no jars to remove"
+	rm -rf api
+	rm -rf debian/libnanoxml2-java-docs || echo "no old bin to remove"
+	rm -rf debian/libnanoxml2-java || echo "no old bin to remove"
+	rm -rf Test/*/*.class
+	rm -rf debian/orig.tmp || echo "No failed source fetch"
+
+	dh_clean 
+
+install:
+	dh_testdir
+	dh_testroot
+	dh_clean -k -i 
+
+	dh_install -i
+
+# Must not depend on anything. This is to be called by
+# binary-arch/binary-indep
+# in another 'make' thread.
+binary-common:
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_link
+	dh_compress 
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+# Build architecture independant packages using the common target.
+binary-indep: build install
+	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+# Build architecture dependant packages using the common target.
+binary-arch:
+
+binary: binary-indep
+.PHONY: build clean binary-indep binary install
+
+test:
+	set -e
+	cd Test/Lite && \
+	${JAVAC} ${JFLAGS} -cp .:../../${LITE} `find -iname *.java` && \
+	for TESTFILE in *.xml; \
+		do if [ "`${JAVA} -cp .:../../${LITE} DumpXML_Lite $${TESTFILE}`" != "`cat $${TESTFILE}.out`" ]; \
+		then	echo ${LITE} failed $${TESTFILE}; \
+			exit 1; \
+		fi; \
+	done
+
+	cd Test/Java && \
+	${JAVAC} ${JFLAGS} -cp .:../../${NANOXML} `find -iname *.java` && \
+	for TESTFILE in *.xml; \
+		do if [ "`${JAVA} -cp .:../../${NANOXML} DumpXML $${TESTFILE}`" != "`cat $${TESTFILE}.out`" ] ;\
+		then	echo ${NANOXML} failed $${TESTFILE}; \
+			exit 1; \
+		fi; \
+	done
+	touch $@
+
+get-orig-source:
+	set -e
+	sh ${SRCDIR}/debian/origCleaner.sh thisIsIgnored ${VERSION} alsoIgnored ${SRCDIR}/debian/orig.tmp
