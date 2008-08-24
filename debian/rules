@@ -35,20 +35,25 @@ SAX := nanoxml2-sax-${VERSION}.jar
 build: build-stamp test
 
 build-stamp:
+	mkdir classes
 	(cd Sources/Lite && \
+	mkdir ../../classes/Lite && \
 	${JAVAC} ${JFLAGS} -d ../../classes/Lite `find -iname *.java`)
 	(cd classes/Lite && \
 	${JAR} cf ../../${LITE} * )
 	(cd Sources/Java && \
+	mkdir ../../classes/Java && \
 	${JAVAC} ${JFLAGS} -d ../../classes/Java `find -iname *.java`)
 	(cd classes/Java && ${JAR} cf ../../${NANOXML} * )
-	(cd Sources/SAX && ${JAVAC} ${JFLAGS} -d ../../classes/SAX \
+	(cd Sources/SAX && \
+	mkdir ../../classes/SAX && \
+	${JAVAC} ${JFLAGS} -d ../../classes/SAX \
 	-cp ../../${NANOXML} `find -iname *.java`)
 	(cd classes/SAX && \
 	echo Class-Path: /usr/share/java/${NANOXML} >> manifest && \
-	${JAR} cf ../../${SAX} net  -m manifest)
+	${JAR} cmf manifest ../../${SAX} net)
 	${JAVADOC} -author -link /usr/share/doc/classpath-doc/api/ -quiet \
-	-sourcepath Sources/Java/:Sources/Lite/:Sources/SAX/ -validhtml \
+	-sourcepath Sources/Java/:Sources/Lite/:Sources/SAX/ -source 1.4 \
 	nanoxml net.n3.nanoxml net.n3.nanoxml.sax -d api
 	touch $@
 

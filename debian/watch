@@ -1,5 +1,6 @@
 version=3
 opts=dversionmangle=s/\.dfsg(.)*//g \
-http://nanoxml.cyberelf.be/downloads/NanoXML-(.+)\.tar\.gz \
+http://devkix.com/nanoxml.php \
+NanoXML-(.+)\.tar\.gz \
 debian \
 debian/origCleaner.sh

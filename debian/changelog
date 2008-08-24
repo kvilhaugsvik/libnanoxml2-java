@@ -1,3 +1,12 @@
+libnanoxml2-java (2.2.3.dfsg-2) unstable; urgency=low
+
+  * Made description and copyright file more precise
+  * Build-Depends-Indep instead of Build-Depends (Lintian fix)
+  * Watchfile and homepage field updated (Closes: #504764)
+  * Fix FTBFS on Ubuntu (LP: #295686)
+
+ -- Sveinung Kvilhaugsvik <sveinung84@users.sourceforge.net>  Sun, 24 Aug 2008 21:17:35 +0200
+
 libnanoxml2-java (2.2.3.dfsg-1) unstable; urgency=low
 
   * Initial release (Closes: #478727)

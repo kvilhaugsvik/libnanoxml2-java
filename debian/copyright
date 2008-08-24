@@ -2,7 +2,7 @@ This package was debianized by Sveinung Kvilhaugsvik
 <sveinung84@users.sourceforge.net> on Wed, 23 Apr 2008 20:12:50 +0000.
 
 It was downloaded from http://nanoxml.cyberelf.be/
-It was modified to remove a jar.
+It was modified to remove generated files.
 To reproduce call get-orig-source in debian/rules
 
 Upstream Author: 
