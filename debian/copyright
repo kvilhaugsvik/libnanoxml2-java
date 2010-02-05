@@ -11,7 +11,7 @@ Upstream Author:
 
 Copyright: 
 
-    Copyright (C) 2000-2002 Marc De Scheemaecker
+    Copyright ©2000-2002 Marc De Scheemaecker
 
 License:
 
@@ -33,6 +33,6 @@ the following restrictions:
       misrepresented as being the original software.
    3. This notice may not be removed or altered from any source distribution.
 
-The Debian packaging is (C) 2008, Sveinung Kvilhaugsvik 
+The Debian packaging is ©2008-2009, Sveinung Kvilhaugsvik 
 <sveinung84@users.sourceforge.net> and is licensed under the GPL, see 
 `/usr/share/common-licenses/GPL' or the license above if you prefer that.

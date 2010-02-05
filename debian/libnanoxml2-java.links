@@ -1,4 +1,6 @@
-/usr/share/java/nanoxml2-2.2.3.jar /usr/share/java/nanoxml2.jar
-/usr/share/java/nanoxml2-lite-2.2.3.jar /usr/share/java/nanoxml2-lite.jar
-/usr/share/java/nanoxml2-sax-2.2.3.jar /usr/share/java/nanoxml2-sax.jar
-
+/usr/share/java/nanoxml-sax-2.2.3.jar	/usr/share/java/nanoxml2-2.2.3.jar
+/usr/share/java/nanoxml-lite-2.2.3.jar	/usr/share/java/nanoxml2-lite-2.2.3.jar
+/usr/share/java/nanoxml-lite.jar	/usr/share/java/nanoxml2-lite.jar
+/usr/share/java/nanoxml-sax-2.2.3.jar	/usr/share/java/nanoxml2-sax-2.2.3.jar
+/usr/share/java/nanoxml-sax.jar	/usr/share/java/nanoxml2-sax.jar
+/usr/share/java/nanoxml.jar	/usr/share/java/nanoxml2.jar

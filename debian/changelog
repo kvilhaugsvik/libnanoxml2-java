@@ -1,3 +1,26 @@
+libnanoxml2-java (2.2.3.dfsg-3) unstable; urgency=low
+
+  * Depend on headless since full jre not needed
+  * Removed (C) from debian/copyright (Lintian fix)
+  * Added misc:Depends (Lintian fix)
+  * Changed section to java
+  * Use javahelper to shorten rules
+    + Use jh_build to build jars
+    + Use jh_installlibs to install jars
+  * Correct misunderstanding about Debian policy for naming jars
+    + Add links to old jar names in case someone used them
+    + Also link to how upstreams name the jars
+  * Should now follow Debian Policy 3.8.4.0
+    + Support nocheck in DEB_BUILD_OPTIONS
+  * depend on default-jdk-doc instead of classpath-doc (Closes: #567284)
+  * Don't build dep on default-jdk-builddep (pointed out by Matthew Johnson)
+  * Don't depend on openjdk as default (pointed out by Matthew Johnson)
+  * Use bnd to add OSGi metadata during build
+  * Use jh_installjavadoc to install and register javadocs
+  * Remove unused lines in clean target of rules
+
+ -- Sveinung Kvilhaugsvik <sveinung84@users.sourceforge.net>  Fri, 05 Feb 2010 15:19:08 +0100
+
 libnanoxml2-java (2.2.3.dfsg-2) unstable; urgency=low
 
   * Made description and copyright file more precise

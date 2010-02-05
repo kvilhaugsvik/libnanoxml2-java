@@ -16,45 +16,40 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-JAVA?=/usr/lib/jvm/default-java/bin/java
-JAVAC?=/usr/lib/jvm/default-java/bin/javac
-JAR?=/usr/lib/jvm/default-java/bin/jar
+JAVA_HOME?=/usr/lib/jvm/default-java
 JFLAGS?=-source 1.4 -nowarn
-JAVADOC?=/usr/lib/jvm/default-java/bin/javadoc
 
 SRCDIR := $(shell echo ./$(word $(words ${MAKEFILE_LIST}), ${MAKEFILE_LIST}) | \
 sed -r "s/debian\/rules$$//")
 VERSION := $(shell cd ${SRCDIR} && dpkg-parsechangelog | egrep '^Version:' | \
 cut -f 2 -d ' ' | sed -r 's/\.dfsg(.)*//g')
 
-NANOXML := nanoxml2-${VERSION}.jar
-LITE := nanoxml2-lite-${VERSION}.jar
-SAX := nanoxml2-sax-${VERSION}.jar
+NANOXML := nanoxml.jar
+LITE := nanoxml-lite.jar
+SAX := nanoxml-sax.jar
 
 #Architecture 
-build: build-stamp test
+build: build-stamp
 
 build-stamp:
-	mkdir classes
-	(cd Sources/Lite && \
-	mkdir ../../classes/Lite && \
-	${JAVAC} ${JFLAGS} -d ../../classes/Lite `find -iname *.java`)
-	(cd classes/Lite && \
-	${JAR} cf ../../${LITE} * )
-	(cd Sources/Java && \
-	mkdir ../../classes/Java && \
-	${JAVAC} ${JFLAGS} -d ../../classes/Java `find -iname *.java`)
-	(cd classes/Java && ${JAR} cf ../../${NANOXML} * )
-	(cd Sources/SAX && \
-	mkdir ../../classes/SAX && \
-	${JAVAC} ${JFLAGS} -d ../../classes/SAX \
-	-cp ../../${NANOXML} `find -iname *.java`)
-	(cd classes/SAX && \
-	echo Class-Path: /usr/share/java/${NANOXML} >> manifest && \
-	${JAR} cmf manifest ../../${SAX} net)
-	${JAVADOC} -author -link /usr/share/doc/classpath-doc/api/ -quiet \
+	jh_build -o'${JFLAGS}' -N ${LITE} Sources/Lite/
+	jh_build -o'${JFLAGS}' -N ${NANOXML} Sources/Java/
+	CLASSPATH=${NANOXML} jh_build -o'${JFLAGS}' -N ${SAX} Sources/SAX/
+	jh_manifest -c /usr/share/java/${NANOXML} ${SAX}
+
+	bnd wrap *.jar
+	rm *.jar
+	prename 's/bar/jar/' *.bar
+
+	cp /usr/share/doc/default-jdk-doc/api/package-list.gz .
+	gunzip package-list.gz
+	${JAVA_HOME}/bin/javadoc -author -linkoffline /usr/share/doc/default-jdk-doc/api . -quiet \
 	-sourcepath Sources/Java/:Sources/Lite/:Sources/SAX/ -source 1.4 \
 	nanoxml net.n3.nanoxml net.n3.nanoxml.sax -d api
+	if [ $(filter nocheck, $(DEB_BUILD_OPTIONS)) ]; \
+		then	echo "Disabeling tests"; \
+		else	make -f debian/rules test; \
+	fi;
 	touch $@
 
 clean:
@@ -62,13 +57,13 @@ clean:
 	dh_testroot
 	rm -f build-stamp test
 
-	rm -rf classes || echo "no classes to remove"
-	rm ${SAX} ${NANOXML} ${LITE} || echo "no jars to remove"
+	jh_clean
+	rm ${SAX} ${NANOXML} ${LITE} *.bar || echo "no jars to remove"
 	rm -rf api
-	rm -rf debian/libnanoxml2-java-docs || echo "no old bin to remove"
-	rm -rf debian/libnanoxml2-java || echo "no old bin to remove"
 	rm -rf Test/*/*.class
 	rm -rf debian/orig.tmp || echo "No failed source fetch"
+
+	rm -r package-list package-list.gz || echo "package-list not copied"
 
 	dh_clean 
 
@@ -77,6 +72,8 @@ install:
 	dh_testroot
 	dh_clean -k -i 
 
+	jh_installlibs -i
+	jh_installjavadoc -plibnanoxml2-java-doc
 	dh_install -i
 
 # Must not depend on anything. This is to be called by
@@ -107,18 +104,18 @@ binary: binary-indep
 test:
 	set -e
 	cd Test/Lite && \
-	${JAVAC} ${JFLAGS} -cp .:../../${LITE} `find -iname *.java` && \
+	${JAVA_HOME}/bin/javac ${JFLAGS} -cp .:../../${LITE} `find -iname *.java` && \
 	for TESTFILE in *.xml; \
-		do if [ "`${JAVA} -cp .:../../${LITE} DumpXML_Lite $${TESTFILE}`" != "`cat $${TESTFILE}.out`" ]; \
+		do if [ "`${JAVA_HOME}/bin/java -cp .:../../${LITE} DumpXML_Lite $${TESTFILE}`" != "`cat $${TESTFILE}.out`" ]; \
 		then	echo ${LITE} failed $${TESTFILE}; \
 			exit 1; \
 		fi; \
 	done
 
 	cd Test/Java && \
-	${JAVAC} ${JFLAGS} -cp .:../../${NANOXML} `find -iname *.java` && \
+	${JAVA_HOME}/bin/javac ${JFLAGS} -cp .:../../${NANOXML} `find -iname *.java` && \
 	for TESTFILE in *.xml; \
-		do if [ "`${JAVA} -cp .:../../${NANOXML} DumpXML $${TESTFILE}`" != "`cat $${TESTFILE}.out`" ] ;\
+		do if [ "`${JAVA_HOME}/bin/java -cp .:../../${NANOXML} DumpXML $${TESTFILE}`" != "`cat $${TESTFILE}.out`" ] ;\
 		then	echo ${NANOXML} failed $${TESTFILE}; \
 			exit 1; \
 		fi; \

@@ -1,16 +1,19 @@
 Source: libnanoxml2-java
-Section: libs
+Section: java
 Priority: optional
 Maintainer: Sveinung Kvilhaugsvik <sveinung84@users.sourceforge.net>
 Build-Depends: debhelper (>= 5)
-Build-Depends-Indep: classpath-doc,
-                     default-jdk-builddep
-Standards-Version: 3.8.0
+Build-Depends-Indep: default-jdk-doc,
+                     default-jdk,
+                     bnd,
+                     perl,
+                     javahelper
+Standards-Version: 3.8.4.0
 Homepage: http://devkix.com/nanoxml.php
 
 Package: libnanoxml2-java
 Architecture: all
-Depends: openjdk-6-jre | java2-runtime
+Depends: default-jre-headless | java2-runtime-headless, ${misc:Depends}
 Suggests: libnanoxml2-java-doc
 Description: small XML parser for Java
  NanoXML is a (actually more than one) small XML parser for Java. It
@@ -22,7 +25,7 @@ Description: small XML parser for Java
 Package: libnanoxml2-java-doc
 Architecture: all
 Section: doc
-Depends: classpath-doc
+Depends: default-jdk-doc, ${misc:Depends}
 Description: documentation for libnanoxml2-java
  NanoXML is a small XML parser for Java. This is the javadoc for it
  (the Java packages net.n3.nanoxml.*, net.n3.nanoxml.sax.* and nanoxml.*)
