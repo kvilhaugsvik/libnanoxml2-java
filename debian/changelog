@@ -1,3 +1,9 @@
+libnanoxml2-java (2.2.3.dfsg-4) unstable; urgency=low
+
+  * Removed no longer needed work around for 567899 (Closes: #573697)
+
+ -- Sveinung Kvilhaugsvik <sveinung84@users.sourceforge.net>  Wed, 17 Mar 2010 02:01:04 +0100
+
 libnanoxml2-java (2.2.3.dfsg-3) unstable; urgency=low
 
   * Depend on headless since full jre not needed

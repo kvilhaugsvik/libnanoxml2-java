@@ -41,9 +41,7 @@ build-stamp:
 	rm *.jar
 	prename 's/bar/jar/' *.bar
 
-	cp /usr/share/doc/default-jdk-doc/api/package-list.gz .
-	gunzip package-list.gz
-	${JAVA_HOME}/bin/javadoc -author -linkoffline /usr/share/doc/default-jdk-doc/api . -quiet \
+	${JAVA_HOME}/bin/javadoc -author -link /usr/share/doc/default-jdk-doc/api -quiet \
 	-sourcepath Sources/Java/:Sources/Lite/:Sources/SAX/ -source 1.4 \
 	nanoxml net.n3.nanoxml net.n3.nanoxml.sax -d api
 	if [ $(filter nocheck, $(DEB_BUILD_OPTIONS)) ]; \
@@ -62,8 +60,6 @@ clean:
 	rm -rf api
 	rm -rf Test/*/*.class
 	rm -rf debian/orig.tmp || echo "No failed source fetch"
-
-	rm -r package-list package-list.gz || echo "package-list not copied"
 
 	dh_clean 
 
