@@ -1,3 +1,12 @@
+libnanoxml2-java (2.2.3.dfsg-4.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Transition to bnd 2.1.0.
+  * Do not depend on a Java runtime because the Java Policy does not require
+    this anymore.
+
+ -- Markus Koschany <apo@debian.org>  Wed, 18 Nov 2015 21:05:35 +0100
+
 libnanoxml2-java (2.2.3.dfsg-4) unstable; urgency=low
 
   * Removed no longer needed work around for 567899 (Closes: #573697)

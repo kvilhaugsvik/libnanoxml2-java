@@ -28,7 +28,7 @@ NANOXML := nanoxml.jar
 LITE := nanoxml-lite.jar
 SAX := nanoxml-sax.jar
 
-#Architecture 
+#Architecture
 build: build-stamp
 
 build-stamp:
@@ -37,9 +37,12 @@ build-stamp:
 	CLASSPATH=${NANOXML} jh_build -o'${JFLAGS}' -N ${SAX} Sources/SAX/
 	jh_manifest -c /usr/share/java/${NANOXML} ${SAX}
 
-	bnd wrap *.jar
-	rm *.jar
-	prename 's/bar/jar/' *.bar
+	bnd wrap --output $(NANOXML).tmp $(NANOXML)
+	bnd wrap --output $(LITE).tmp $(LITE)
+	bnd wrap --output $(SAX).tmp $(SAX)
+	mv $(NANOXML).tmp $(NANOXML)
+	mv $(LITE).tmp $(LITE)
+	mv $(SAX).tmp $(SAX)
 
 	${JAVA_HOME}/bin/javadoc -author -link /usr/share/doc/default-jdk-doc/api -quiet \
 	-sourcepath Sources/Java/:Sources/Lite/:Sources/SAX/ -source 1.4 \
@@ -61,12 +64,12 @@ clean:
 	rm -rf Test/*/*.class
 	rm -rf debian/orig.tmp || echo "No failed source fetch"
 
-	dh_clean 
+	dh_clean
 
 install:
 	dh_testdir
 	dh_testroot
-	dh_clean -k -i 
+	dh_clean -k -i
 
 	jh_installlibs -i
 	jh_installjavadoc -plibnanoxml2-java-doc
@@ -78,10 +81,10 @@ install:
 binary-common:
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs 
+	dh_installchangelogs
 	dh_installdocs
 	dh_link
-	dh_compress 
+	dh_compress
 	dh_fixperms
 	dh_installdeb
 	dh_gencontrol

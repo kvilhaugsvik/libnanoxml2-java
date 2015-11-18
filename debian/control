@@ -5,7 +5,7 @@ Maintainer: Sveinung Kvilhaugsvik <sveinung84@users.sourceforge.net>
 Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: default-jdk-doc,
                      default-jdk,
-                     bnd,
+                     bnd (>= 2.1.0),
                      perl,
                      javahelper
 Standards-Version: 3.8.4.0
@@ -13,7 +13,7 @@ Homepage: http://devkix.com/nanoxml.php
 
 Package: libnanoxml2-java
 Architecture: all
-Depends: default-jre-headless | java2-runtime-headless, ${misc:Depends}
+Depends: ${misc:Depends}
 Suggests: libnanoxml2-java-doc
 Description: small XML parser for Java
  NanoXML is a (actually more than one) small XML parser for Java. It
