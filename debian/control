@@ -1,7 +1,8 @@
 Source: libnanoxml2-java
 Section: java
 Priority: optional
-Maintainer: Sveinung Kvilhaugsvik <sveinung84@users.sourceforge.net>
+Maintainer: Debian Java maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Uploaders: Sveinung Kvilhaugsvik <sveinung84@users.sourceforge.net>
 Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: default-jdk-doc,
                      default-jdk,

@@ -1,5 +1,7 @@
 libnanoxml2-java (2.2.3.dfsg-4.1) unstable; urgency=medium
 
+  * Team maintain the package in Debian Java maintainers so all members can
+    modify and upload it without asking first.
   * Transition to bnd 2.1.0. (Closes: #805499)
   * Do not depend on a Java runtime because the Java Policy does not require
     this anymore.
